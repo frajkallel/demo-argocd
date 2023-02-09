@@ -1,0 +1,99 @@
+# repo-sync.yaml
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: cdf
+  namespace: cdf
+spec:
+  git:
+    auth: none
+    branch: master
+    period: 5s
+    repo: https://github.com/frajkallel/cdf-app.git
+    dir: ./qua/externe
+    revision: HEAD
+    secretRef: {}
+  override: {}
+  sourceFormat: unstructured
+  sourceType: git
+  
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cdf
+  namespace: cdf
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-cdf-cdf-3
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
+---
+# repo-sync.yaml
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: cdf-interne
+  namespace: cdf-interne
+spec:
+  git:
+    auth: none
+    branch: master
+    period: 5s
+    repo: https://github.com/frajkallel/cdf-app.git
+    dir: ./qua/interne
+    revision: HEAD
+    secretRef: {}
+  override: {}
+  sourceFormat: unstructured
+  sourceType: git
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cdf-interne
+  namespace: cdf-interne
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-cdf-interne-cdf-interne-11
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
+---
+# repo-sync.yaml
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: hello-cdf-interne
+  namespace: cdf-interne
+spec:
+  git:
+    auth: none
+    branch: master
+    period: 5s
+    repo: https://github.com/frajkallel/hello-app.git
+    revision: HEAD
+    secretRef: {}
+  override: {}
+  sourceFormat: unstructured
+  sourceType: git
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cdf-interne
+  namespace: cdf-interne
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-cdf-interne-hello-cdf-interne-17
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
